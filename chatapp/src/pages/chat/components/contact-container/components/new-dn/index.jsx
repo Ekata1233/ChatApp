@@ -19,7 +19,7 @@ import {
   import { animationDefaultOptions, getColor } from "@/lib/utils";
   import Lottie from "react-lottie";
   import { apiClient } from "@/lib/api-client";
-  import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants";
+  import { HOST, SEARCH_CONTACTS_ROUTES } from "@/utils/constants";
   import { ScrollArea } from "@/components/ui/scroll-area";
   import { useAppStore } from "@/store";
   import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -141,8 +141,8 @@ import {
               text-xl transition-all duration-300 text-center"
                 >
                   <h2 className="poppins-medium">
-                    Hi<span className="text-purple-500"> ! </span>Search new
-                    <span className="text-purple-500"> Conatct</span>
+                    Hi<span className="text-green-500"> ! </span>Search new
+                    <span className="text-green-500"> Conatct</span>
                   </h2>
                 </div>
               </div>

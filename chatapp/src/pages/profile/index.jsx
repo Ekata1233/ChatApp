@@ -194,7 +194,7 @@ const handleDeleteImage =async ()=>{
            
         </div>
         <div className='w-full'>
-      <Button className="h-16 w-full bg-purple-700 hover:bg-purple-900 transition-all duration-300" onClick={svaeChanges}>Save Changes</Button>
+      <Button className="h-16 w-full bg-green-700 hover:bg-green-900 transition-all duration-300" onClick={svaeChanges}>Save Changes</Button>
       </div>
       </div>
      

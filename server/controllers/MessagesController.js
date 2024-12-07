@@ -56,3 +56,29 @@ export const uploadFile =async (request , response, next )=>{
     }
 
 }
+export const deleteChatMessages = async (request, response, next) => {
+    try {
+      const user1 = request.userId; 
+      const user2 = request.body.id; 
+  
+      if (!user1 || !user2) {
+        return response.status(400).send("Both user IDs are required.");
+      }
+  
+      const result = await Message.deleteMany({
+        $or: [
+          { sender: user1, recipient: user2 },
+          { sender: user2, recipient: user1 },
+        ],
+      });
+  
+      if (result.deletedCount === 0) {
+        return response.status(404).send("No messages found to delete.");
+      }
+  
+      return response.status(200).json({ message: "Messages deleted successfully." });
+    } catch (error) {
+      console.error({ error });
+      return response.status(500).send("Internal server error");
+    }
+  };

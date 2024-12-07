@@ -140,9 +140,13 @@ function MessageBar() {
          </div>
          </div>
       </div>
-      <button className="bg-[#8417ff] rounded-md flex items-center justify-center p-5 hover:bg-[#741bda] focus:bg-[#741bda] focus:border-none focus:outline-none focus:text-white duration-300 transition-all" onClick={handleSendMessage}>
-              <IoSend className="text-2xl"/>
-         </button>
+      <button
+  className="bg-[#10b981] rounded-md flex items-center justify-center p-5 hover:bg-[#0e8f69] focus:bg-[#0e8f69] focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
+  onClick={handleSendMessage}
+>
+  <IoSend className="text-2xl" />
+</button>
+
     </div>
   )
 }

@@ -47,12 +47,8 @@ export const getUserChannel =async (request , response, next )=>{
         const channels=await Channel.find({
             $or:[{admin:userId},{members:userId}],
         }).sort({updatedAt:-1});
-
-      
        
        return response.status(201).json({channels});
-
-   
 
     }catch(error){
         console.log({error})
@@ -60,6 +56,8 @@ export const getUserChannel =async (request , response, next )=>{
     }
 
 }
+
+
 export const getChannelMessages = async (request, response, next) => {
     try {
       const {channelId} = request.params;
