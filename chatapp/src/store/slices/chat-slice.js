@@ -60,31 +60,37 @@ export const createChatSlice=(set,get)=>({
                 channels.unshift(data);
             }
         },
-
-        addContactsInDmContacts:(message)=>{
-            const userId=get().userInfo.id;
-            const fromId=
-            message.sender._id===userId
-            ? message.recipient._id
-            :message.sender._id;
-
-            const fromData=
-            message.sender._id===userId ? message.recipient : message.sender;
-            const dmContacts =get().directMessagesContact;
-            const data=dmContacts.find((contact)=>contact._id===fromId);
-            const index = dmContacts.findIndex((contact)=>contact._id===fromId);
-
-            if(index !== -1 && index !== undefined){
-                dmContacts.splice(index,1)
-                dmContacts.unshift(data);
-                
+        addContactsInDmContacts: (message) => {
+            const userId = get().userInfo.id;
+        
+            const fromId = 
+                message.sender._id === userId
+                    ? message.recipient._id
+                    : message.sender._id;
+        
+            const fromData =
+                message.sender._id === userId ? message.recipient : message.sender;
+        
+            const dmContacts = get().directMessagesContact;
+        
+            const data = dmContacts.find((contact) => contact._id === fromId);
+            const index = dmContacts.findIndex((contact) => contact._id === fromId);
+        
+            if (index !== -1) {
+                if (message.sender._id !== userId) {
+                    data.messageCount = (data.messageCount || 0) + 1;
+                }
+                dmContacts.splice(index, 1); 
+                dmContacts.unshift(data);   
+            } else {
+                if (message.sender._id !== userId) {
+                    fromData.messageCount = 1; 
+                    dmContacts.unshift(fromData); 
+                }
             }
-            else {
-                dmContacts.unshift(fromData);
-                
-            }
-            set({directMessagesContact:dmContacts})
+        
+            set({ directMessagesContact: dmContacts });
         }
+        
+        
 });
-
-// hjkhjhjhj
