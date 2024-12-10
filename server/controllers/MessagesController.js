@@ -82,3 +82,26 @@ export const deleteChatMessages = async (request, response, next) => {
       return response.status(500).send("Internal server error");
     }
   };
+
+  export const deleteMessage = async (req, res) => {
+    try {
+      const { messageId } = req.body;
+  
+      if (!messageId) {
+        return res.status(400).json({ success: false, message: "Message ID is required." });
+      }
+  
+      // Assuming you have a Message model in your database
+      const deletedMessage = await Message.findByIdAndDelete(messageId);
+  
+      if (!deletedMessage) {
+        return res.status(404).json({ success: false, message: "Message not found." });
+      }
+  
+      res.status(200).json({ success: true, message: "Message deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      res.status(500).json({ success: false, message: "Failed to delete message." });
+    }
+  };
+  

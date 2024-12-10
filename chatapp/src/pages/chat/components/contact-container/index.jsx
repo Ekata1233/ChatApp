@@ -67,35 +67,35 @@ export default ContactContainer;
 const Logo = () => {
   return (
     <div className="flex p-5 justify-start items-center gap-2">
-      <svg
-        id="logo-circle-6"
-        width="80"
-        height="40"
-        viewBox="0 0 80 40"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="20"
-          cy="20"
-          r="15"
-          className="circle1"
-          fill="#34d399"
-        ></circle>
-        <circle
-          cx="40"
-          cy="20"
-          r="15"
-          className="circle2"
-          fill="#10b981"
-        ></circle>
-        <circle
-          cx="60"
-          cy="20"
-          r="15"
-          className="circle3"
-          fill="#047857"
-        ></circle>
-      </svg>
+       <svg
+      id="logo-circle-6"
+      width="80"
+      height="40"
+      viewBox="0 0 80 40"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="20"
+        cy="20"
+        r="15"
+        className="circle1"
+        fill="#34d399"
+      ></circle>
+      <circle
+        cx="40"
+        cy="20"
+        r="15"
+        className="circle2"
+        fill="#10b981"
+      ></circle>
+      <circle
+        cx="60"
+        cy="20"
+        r="15"
+        className="circle3"
+        fill="#047857"
+      ></circle>
+    </svg>
       <span className="text-3xl font-semibold">VibeChat</span>
 
       <style>

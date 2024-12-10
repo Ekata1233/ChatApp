@@ -29,4 +29,6 @@ export const GET_CHANNEL_MESSAGES=`${CHANNEL_ROUTES}/get-channel-messages`;
 
 export const DELETE_CHAT_ROUTE = `${MESSAGES_ROUTES}/delete-messages`;
 
+export const DELETE_MESSAGE_ROUTE=`${MESSAGES_ROUTES}/delete-msg`
+
 export const GET_USER_DETAILS_ROUTE = `${CONTACTS_ROUTES}/get-user/:userId`;

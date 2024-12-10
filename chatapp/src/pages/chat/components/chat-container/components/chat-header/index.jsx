@@ -60,7 +60,7 @@ function ChatHeader() {
                 { withCredentials: true }
               );
               console.log(response);
-              
+
               newUsernames[memberId] = response.data.userDetails.username;
               newUserImages[memberId] = response.data.userDetails.image;
             }
@@ -88,27 +88,29 @@ function ChatHeader() {
 
   const handleDeleteChat = async () => {
     try {
-      if (window.confirm("Are you sure you want to delete this chat?")) {
+      if (window.confirm("Are you sure you want to delete this chat for yourself?")) {
         const previousMessages = [...selectedChatMessages];
         setSelectedChatMessages([]);
-
+  
         const response = await apiClient.post(
-          DELETE_CHAT_ROUTE,
-          { id: selectedChatData._id },
+          `${DELETE_CHAT_ROUTE}/self`, // Assuming this is the route for deleting the chat only for the current user
+          { chatId: selectedChatData._id },
           { withCredentials: true }
         );
-
+  
         if (!response.data.success) {
-          alert(response.data.message || "Failed to delete chat.");
+          alert(response.data.message || "Failed to delete the chat for yourself.");
           setSelectedChatMessages(previousMessages);
         }
       }
     } catch (error) {
-      console.error("Error deleting chat:", error);
+      console.error("Error deleting chat for yourself:", error);
     }
   };
+  
 
   const handleModalOpen = () => {
+   
     setModalOpen(true);
   };
 
@@ -171,7 +173,7 @@ function ChatHeader() {
       </div>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="bg-[#181920] border-none text-white w-[400px] h-[300px] flex flex-col">
+        <DialogContent className="bg-[#181920] border-none text-white w-[350px] h-[250px] flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {selectedChatType === "channel"
@@ -192,10 +194,7 @@ function ChatHeader() {
                   <h4 className="mb-2 text-white">Members:</h4>
                   <ul className="list-disc text-sm text-gray-400 pl-5">
                     {(selectedChatData.members || []).map((member) => (
-                      <li
-                        key={member}
-                        className="mb-1 flex items-center gap-2"
-                      >
+                      <li key={member} className="mb-1 flex items-center gap-2">
                         <Avatar className="h-6 w-6 rounded-full overflow-hidden">
                           {userImages[member] ? (
                             <AvatarImage
@@ -219,34 +218,36 @@ function ChatHeader() {
                   </ul>
                 </>
               )}
-              {selectedChatType === "contact" && userDetails && (
-                <>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12 rounded-full overflow-hidden">
-                      {userDetails.image ? (
-                        <AvatarImage
-                          src={`${HOST}/${userDetails.image}`}
-                          alt="profile"
-                          className="object-cover w-full h-full bg-black"
-                        />
-                      ) : (
-                        <div
-                          className={`uppercase w-12 h-12 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                            selectedChatData.color
-                          )}`}
-                        >
-                          {userDetails.firstName?.charAt(0) || "?"}
-                        </div>
-                      )}
-                    </Avatar>
-                    <div>
-                      <h4 className="text-white">
-                        {userDetails.firstName} {userDetails.lastName}
-                      </h4>
-                      <p className="text-gray-400">{userDetails.email}</p>
-                    </div>
+              {selectedChatType === "contact" && (
+                <div className="flex flex-col items-center gap-4">
+                  <h3 className="text-white text-xl font-semibold">Contact Details</h3>
+                  <Avatar className="h-16 w-16 rounded-full overflow-hidden">
+                    {selectedChatData.image ? (
+                      <AvatarImage
+                        src={`${HOST}/${selectedChatData.image}`}
+                        alt="profile"
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <div
+                        className={`uppercase w-16 h-16 text-lg border-[1px] flex items-center justify-center rounded-full bg-gray-500 ${getColor(
+                          selectedChatData.color
+                        )}`}
+                      >
+                        {selectedChatData.firstName?.charAt(0) || "?"}
+                      </div>
+                    )}
+                  </Avatar>
+
+                  <div className="text-center">
+                    <h6 className="text-white text-l font-semibold">
+                      {selectedChatData.firstName} {selectedChatData.lastName}
+                    </h6>
+                    <p className="text-gray-400 text-sm">
+                      {selectedChatData.email}
+                    </p>
                   </div>
-                </>
+                </div>
               )}
             </DialogDescription>
           </DialogHeader>
