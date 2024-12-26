@@ -138,7 +138,7 @@ function MessageContainer() {
       }`}
     >
       {message.messageType === "text" && (
-        <div
+        <div style={{cursor:"pointer"}}
           className={`${
             message.sender !== selectedChatData._id
               ? "bg-[#8417ff]/5 text-[#10b981]/90 border-[#10b981]/50"
