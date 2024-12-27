@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
-import { DELETE_MESSAGE_ROUTE, GET_ALL_CONTACTS_ROUTES, GET_ALL_MESSAGES_ROUTE, GET_CHANNEL_MESSAGES, HOST } from "@/utils/constants";
+import { DELETE_EVERYONE_ROUTE, DELETE_MESSAGE_ROUTE, GET_ALL_CONTACTS_ROUTES, GET_ALL_MESSAGES_ROUTE, GET_CHANNEL_MESSAGES, HOST } from "@/utils/constants";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { MdFolderZip } from "react-icons/md";
@@ -9,6 +9,8 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
 import { FaTrash } from "react-icons/fa";
+// import { Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 function MessageContainer() {
   const scrollRef = useRef();
@@ -26,6 +28,7 @@ function MessageContainer() {
 
   const [showImage, setShowImage] = useState(false);
   const [imageURL, setImageURL] = useState(null);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -56,12 +59,20 @@ function MessageContainer() {
         console.error("Error fetching channel messages:", error);
       }
     };
+    
+
+   
 
     if (selectedChatData?._id) {
       if (selectedChatType === "contact") getMessages();
       else if (selectedChatType === "channel") getChannelMessages();
     }
   }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
+
+  useEffect(() => {
+    // Fetch initial messages
+    
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -297,28 +308,47 @@ function MessageContainer() {
       </div>
     );
   };
+
   const handleDeleteMessage = async (messageId) => {
     try {
+      // Clone the current messages
       const previousMessages = [...selectedChatMessages];
-      const updatedMessages = selectedChatMessages.filter(
-        (message) => message._id !== messageId
+  
+      // Update the message to show "Message deleted for everyone"
+      const updatedMessages = selectedChatMessages.map((message) =>
+        message._id === messageId
+          ? { ...message, content: "Delete for everyone", deleted: true }
+          : message
       );
+  
+      // Update state to reflect the UI change
       setSelectedChatMessages(updatedMessages);
-
+  
+      // Make API call to delete the message
       const response = await apiClient.post(
-        `${DELETE_MESSAGE_ROUTE}`,
+        `${DELETE_EVERYONE_ROUTE}`,
         { messageId },
         { withCredentials: true }
       );
-
+  
       if (!response.data.success) {
+        // Revert back to previous messages if deletion failed
         alert(response.data.message || "Failed to delete the message.");
         setSelectedChatMessages(previousMessages);
       }
     } catch (error) {
+      // Handle errors and revert back to the previous state
       console.error("Error deleting message:", error);
+      setSelectedChatMessages(previousMessages);
     }
   };
+  
+  
+  
+  
+ 
+  
+  
   return (
     <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
       {renderMessages()}

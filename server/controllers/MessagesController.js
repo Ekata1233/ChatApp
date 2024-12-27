@@ -1,7 +1,9 @@
 import { ImOffice } from "react-icons/im";
 import Message from "../models/messagesModel.js"
 import {mkdirSync, renameSync} from 'fs'
+
 export const getMessages =async (request , response, next )=>{
+  console.log("Check in terminal : ", request.body)
     try{
        
         const user1=request.userId;
@@ -104,4 +106,29 @@ export const deleteChatMessages = async (request, response, next) => {
       res.status(500).json({ success: false, message: "Failed to delete message." });
     }
   };
+   export const deleteForEveryone = async (req, res) => {
+    const { messageId } = req.body;
+    console.log("Delete for everyone called..", req.body);
+    
+    
+  try {
+    // Mark message as deleted
+    const message = await Message.findByIdAndUpdate(
+      messageId,
+      { content: "Delete for everyone", deleted: true },
+      { new: true } // Return the updated message
+    );
+
+    if (!message) {
+      return res.status(404).json({ success: false, message: "Message not found" });
+    }
+
+    
+
+    res.json({ success: true, message: "Message deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    res.status(500).json({ success: false, message: "Failed to delete the message" });
+  }
+};
   

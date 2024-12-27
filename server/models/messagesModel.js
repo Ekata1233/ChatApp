@@ -31,6 +31,8 @@ const messagesSchema=new mongoose.Schema({
         type:Date,
         default:Date.now,
     },
+    deleted: 
+    { type: Boolean, default: false },
 });
 
 const Message =mongoose.model("Message",messagesSchema);
