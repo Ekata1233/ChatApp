@@ -9,11 +9,11 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
 import { FaTrash } from "react-icons/fa";
-// import { Socket } from "socket.io-client";
-import { Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 function MessageContainer() {
   const scrollRef = useRef();
+  const socket = useRef(null); // WebSocket reference
   const {
     selectedChatType,
     selectedChatData,
@@ -29,6 +29,8 @@ function MessageContainer() {
   const [showImage, setShowImage] = useState(false);
   const [imageURL, setImageURL] = useState(null);
   const [messages, setMessages] = useState([]);
+
+ 
 
   useEffect(() => {
     const getMessages = async () => {
@@ -311,37 +313,49 @@ function MessageContainer() {
 
   const handleDeleteMessage = async (messageId) => {
     try {
-      // Clone the current messages
       const previousMessages = [...selectedChatMessages];
-  
-      // Update the message to show "Message deleted for everyone"
       const updatedMessages = selectedChatMessages.map((message) =>
         message._id === messageId
-          ? { ...message, content: "Delete for everyone", deleted: true }
+          ? { ...message, content: " deleted for everyone", deleted: true }
           : message
       );
-  
-      // Update state to reflect the UI change
       setSelectedChatMessages(updatedMessages);
-  
-      // Make API call to delete the message
+
       const response = await apiClient.post(
-        `${DELETE_EVERYONE_ROUTE}`,
+        DELETE_EVERYONE_ROUTE,
         { messageId },
         { withCredentials: true }
       );
-  
-      if (!response.data.success) {
-        // Revert back to previous messages if deletion failed
+
+      if (response.data.success) {
+        socket.current.emit("delete-message", messageId); // Notify other users via WebSocket
+      } else {
         alert(response.data.message || "Failed to delete the message.");
         setSelectedChatMessages(previousMessages);
       }
     } catch (error) {
-      // Handle errors and revert back to the previous state
       console.error("Error deleting message:", error);
       setSelectedChatMessages(previousMessages);
     }
   };
+  useEffect(() => {
+    // Initialize WebSocket connection
+    socket.current = io(HOST, { withCredentials: true });
+
+    socket.current.on("message-deleted", (deletedMessageId) => {
+      setSelectedChatMessages((prevMessages) =>
+        prevMessages.map((message) =>
+          message._id === deletedMessageId
+            ? { ...message, content: "Message deleted for everyone", deleted: true }
+            : message
+        )
+      );
+    });
+
+    return () => {
+      socket.current.disconnect(); // Cleanup WebSocket on component unmount
+    };
+  }, [setSelectedChatMessages]);
   
   
   
