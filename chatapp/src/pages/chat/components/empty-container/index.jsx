@@ -29,6 +29,7 @@ const EmptyChatContainer = () => {
           {/* New Circle Above Text */}
           <div className="absolute top-[48%] left-[50%] transform -translate-x-1/2 -translate-y-full w-26 h-26 bg-[#064e3b] rounded-full animate-bounce delay-1800"></div>
         </div>
+        <div></div>
       </div>
 
       {/* Text Section */}
