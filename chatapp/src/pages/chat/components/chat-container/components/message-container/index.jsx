@@ -140,9 +140,9 @@ function MessageContainer() {
     }
   };
 
-  const handleMessageClick = (messageId) => {
-    setMessageToDelete(messageId); // Set the clicked message ID to delete
-  };
+  // const handleMessageClick = (messageId) => {
+  //   setMessageToDelete(messageId); // Set the clicked message ID to delete
+  // };
 
   const renderDMMessages = (message) => (
     <div
